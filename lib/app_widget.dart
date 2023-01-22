@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'modules/home/homepage.dart';
 import 'modules/login/login_page.dart';
+import 'modules/register_user/register_user_page.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});
@@ -14,6 +15,7 @@ class AppWidget extends StatelessWidget {
         routes: {
           '/login': (context) => const LoginPage(),
           '/home': (context) => const HomePage(),
+          '/register': (context) => const RegisterUserPage(),
         });
   }
 }

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../src/widgets/password_field_widget.dart';
 import '../../src/widgets/user_field_widget.dart';
-import 'login_controller.dart';
+import 'register_user_controller.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterUserPage extends StatefulWidget {
+  const RegisterUserPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterUserPage> createState() => _RegisterUserPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  late final controller = LoginController(onSucessLogin: () {
+class _RegisterUserPageState extends State<RegisterUserPage> {
+  late final controller = RegisterUserController(onSucessLogin: () {
     Navigator.of(context).pushReplacementNamed('/home');
   }, onUpDate: () {
     setState(() {});
@@ -21,10 +20,18 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: controller.formKey,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      appBar: AppBar(
+          title: const Text("Cadastro de usuário"),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/login');
+            },
+          )),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Form(
+          key: controller.formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -35,12 +42,20 @@ class _LoginPageState extends State<LoginPage> {
                 onSaved: (value) => controller.username = value,
               ),
               const SizedBox(height: 20),
-              PasswordFieldWidger(
+              UserFieldWidget(
                 label: "Senha",
+                icon: Icons.lock,
                 validator: controller.validatePassword,
                 onSaved: (value) => controller.password = value,
               ),
               const SizedBox(height: 20),
+              UserFieldWidget(
+                label: "Confirmar senha",
+                icon: Icons.lock,
+                validator: controller.validatePassword,
+                onSaved: (value) => controller.password = value,
+              ),
+              const SizedBox(height: 40),
               if (controller.isLoading)
                 const CircularProgressIndicator()
               else if (controller.error.isNotEmpty)
@@ -51,31 +66,19 @@ class _LoginPageState extends State<LoginPage> {
               else
                 ElevatedButton(
                   onPressed: () {
-                    if (controller.validate()) {
-                      controller.login();
+                    if (controller.formKey.currentState!.validate()) {
+                      controller.formKey.currentState!.save();
+                      controller.register();
                     }
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 8),
                     child: Text(
-                      "Entrar",
+                      "Cadastrar",
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pushReplacementNamed('/register');
-                },
-                child: const Text(
-                  "Crie sua conta",
-                  style: TextStyle(
-                    color: Colors.deepPurpleAccent,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
